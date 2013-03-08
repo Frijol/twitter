@@ -1,7 +1,7 @@
 // npm install express rem
 var rem = require('rem')
   , express = require('express')
-  , path = require('path');
+  , path = require('path')
 
 /**
  * Express.
@@ -95,3 +95,20 @@ app.post('/status', loginRequired, function (req, res) {
 app.listen(app.get('port'), function () {
   console.log('Listening on http://' + app.get('host'))
 });
+
+/**
+ * Streaming example
+ */
+
+var carrier = require('carrier');
+
+app.get('/stream', loginRequired, function (req, res) {
+  req.api.stream('statuses/filter').post({
+    track: ['obama', 'usa']
+  }, function (err, stream) {
+    carrier.carry(stream, function (line) {
+      var line = JSON.parse(line);
+      res.write(line.text + '\n');
+    });
+  });
+})

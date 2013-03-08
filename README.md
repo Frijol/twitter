@@ -43,4 +43,31 @@ If you're getting OAuth errors, ensure your `process.env.TWITTER_KEY` and `proce
 
 ## Consuming the Twitter live stream
 
-Using the Twitter stream implies you are consuming tweets live. Because your Heroku application dies every 10 minutes if it is not being used, we've gotta figure out what code we're going to use as an example.
+You can see an example of an endpoint that consumes a live Twitter stream. Run the following:
+
+```
+$ npm install carrier
+```
+
+Then add this code to the bottom of your `app.js`:
+
+```
+/**
+ * Streaming example
+ */
+
+var carrier = require('carrier');
+
+app.get('/stream', loginRequired, function (req, res) {
+  req.api.stream('statuses/filter').post({
+    track: ['obama', 'usa']
+  }, function (err, stream) {
+    carrier.carry(stream, function (line) {
+      var line = JSON.parse(line);
+      res.write(line.text + '\n');
+    });
+  });
+})
+```
+
+Go to `/stream` in your browser and watch the OBAMAUSA tweets rollll right in.
