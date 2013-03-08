@@ -9,12 +9,22 @@ $ cd twitter
 
 Go to [https://dev.twitter.com/apps](https://dev.twitter.com/apps) and **Create a New Application**.
 
+## Set your environment variables
+
+Find your consumer key and secret:
+
+![http://i.imgur.com/idEWVvM.png](http://i.imgur.com/idEWVvM.png)
+
+Create a `.env` file that uses the following:
+
+```
+TWITTER_KEY=...
+TWITTER_SECRET=...
+```
+
+Then run `foreman start`. This was installed with Heroku toolbelt.
+
 ## Logging in with express and posting
-
-Set your environment variables
-
-* `TWITTER_KEY` set to your application
-* `TWITTER_SECRET` set to your application
 
 ```
 $ npm install
