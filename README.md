@@ -2,6 +2,8 @@
 
 ## Logging in with express and posting
 
-Check out app.js
+`app.js`
 
 ## Posting the Twitter stream
+
+`stream.js`
