@@ -1,16 +1,20 @@
 // npm install express rem
 var rem = require('rem')
   , express = require('express')
+  , app = express()
   , path = require('path')
+  , http = require('http')
+  // , server = http.createServer(app)
+  , browser_socket = null;
+
+var server = app.listen(process.env.PORT || 3000);;
 
 /**
  * Express.
  */
 
-var app = express();
-
 app.configure(function () {
-  app.set('port', process.env.PORT || 3000);
+  // app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.set('secret', process.env.SESSION_SECRET || 'terrible, terrible secret')
@@ -25,7 +29,7 @@ app.configure(function () {
 });
 
 app.configure('development', function () {
-  app.set('host', 'localhost:' + app.get('port'));
+  app.set('host', 'localhost:' + process.env.PORT || 3000);
   app.use(express.errorHandler());
 });
 
@@ -41,7 +45,6 @@ var twitter = rem.connect('twitter.com').configure({
   key: process.env.TWITTER_KEY,
   secret: process.env.TWITTER_SECRET
 });
-
 
 var oauth = rem.oauth(twitter, 'http://' + app.get('host') + '/oauth/callback');
 
@@ -103,12 +106,29 @@ app.listen(app.get('port'), function () {
 var carrier = require('carrier');
 
 app.get('/stream', loginRequired, function (req, res) {
-  req.api.stream('statuses/filter').post({
-    track: ['obama', 'usa']
-  }, function (err, stream) {
-    carrier.carry(stream, function (line) {
-      var line = JSON.parse(line);
-      res.write(line.text + '\n');
+  // req.api.stream('statuses/filter').post({
+  //   track: ['obama michelle', 'usa']
+  // }, function (err, stream) {
+  emit_stream(req);
+  res.render('stream');
+});
+
+function emit_stream(req) {
+  if (browser_socket != null) {
+    console.log("browser", browser_socket);
+    req.api.stream('statuses/sample').get(function (err, stream) {
+      carrier.carry(stream, function (line) {
+        var line = JSON.parse(line);
+        // res.write(line.text + '\n');
+        browser_socket.emit('twitter_stream', {'data': line.text});
+      });
     });
-  });
-})
+  }
+}
+
+// this works for one connection
+var io = require('socket.io').listen(server);
+io.on('connection', function(socket) {
+  console.log("browser connected");
+  browser_socket = socket;
+});
