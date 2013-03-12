@@ -117,9 +117,11 @@ As soon as our browser connects, we're going to grab its socket and keep it for 
 ```jade
 // clientside code
 script(src='/socket.io/socket.io.js')
+script
+  var socket = io.connect(); //connect the browser to the server
 ```
 
-In our clientside code, we're going to include the `/socket.io/socket.io.js` script. This script is automatically added by the socket.io library. **You do not need to actually have the file there.**
+In our clientside code, we're going to include the `/socket.io/socket.io.js` script. This script is automatically added by the socket.io library. **You do not need to actually have the file there.** After it gets included, we can initialize a connection to the server through `io.connect()`
 
 ### Message passing using sockets
 
