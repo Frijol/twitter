@@ -21,7 +21,7 @@ Find your consumer key and secret:
 
 Create a `.env` file that uses the following (don't include spaces around your `=` signs):
 
-```
+```sh
 TWITTER_KEY=...
 TWITTER_SECRET=...
 ```
@@ -30,7 +30,7 @@ Then run `foreman start`. (This was installed with Heroku toolbelt.)
 
 ## Logging in with express and posting
 
-```
+```sh
 $ npm install
 $ foreman start
 ```
@@ -45,13 +45,13 @@ If you're getting OAuth errors, ensure your `process.env.TWITTER_KEY` and `proce
 
 You can see an example of an endpoint that consumes a live Twitter stream. Run the following:
 
-```
+```sh
 $ npm install carrier
 ```
 
 Then add this code to the bottom of your `app.js`:
 
-```
+```javascript
 /**
  * Streaming example
  */
@@ -104,7 +104,7 @@ Now we are passing the initialized http server over to the socket.io library. Th
 
 Next we'll start up the socket connection. This requires code on both our server **and** our client (because socket.io has to talk between the two).
 
-```
+```javascript
 // app.js
 io.on('connection', function(socket) {
   console.log("browser connected");
@@ -127,7 +127,7 @@ In our clientside code, we're going to include the `/socket.io/socket.io.js` scr
 
 A socket from socket.io has an `emit` and a `on` function. If computer A was sending computer B a message in pesudo code it'll look something like
 
-```
+```javascript
 A.emit('special_message_name', {'data': 5});
 B.on('special_message_name', function(data) {
   console.log(data.data);
