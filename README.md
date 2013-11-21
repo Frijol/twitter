@@ -13,45 +13,49 @@ In addition to a name, description, and website, set the following Settings. You
 
 ![http://i.imgur.com/e9BiHo9.png](http://i.imgur.com/e9BiHo9.png)
 
+
 ## Set your environment variables
 
 Find your consumer key and secret:
 
 ![http://i.imgur.com/idEWVvM.png](http://i.imgur.com/idEWVvM.png)
 
-Create a `.env` file that uses the following (don't include spaces around your `=` signs):
+Create a file named `.env` in this directory. Put in this file the following text, replace '...' with your tokens (don't include spaces around your `=` signs):
 
-```sh
+```
 TWITTER_KEY=...
 TWITTER_SECRET=...
 ```
 
-Then run `foreman start`. (This was installed with Heroku toolbelt.)
+Then run `foreman start`. (This was installed with Heroku toolbelt.) This reads environment variables from the `.env` file.
+
 
 ## Logging in with express and posting
 
-```sh
+```
 $ npm install
 $ foreman start
 ```
 
 If you're getting OAuth errors, ensure your `process.env.TWITTER_KEY` and `process.env.TWITTER_SECRET` are set by logging them in Node.
 
+
 ### Using the Twitter API
 
 **API Reference:** [https://dev.twitter.com/docs/api/1.1](https://dev.twitter.com/docs/api/1.1)
+
 
 ## Consuming the Twitter live stream
 
 You can see an example of an endpoint that consumes a live Twitter stream. Run the following:
 
-```sh
+```
 $ npm install carrier
 ```
 
 Then add this code to the bottom of your `app.js`:
 
-```javascript
+```
 /**
  * Streaming example
  */
@@ -72,7 +76,9 @@ app.get('/stream', loginRequired, function (req, res) {
 
 Go to `/stream` in your browser and watch the OBAMAUSA tweets rollll right in.
 
+
 ## WEEEB sockets
+
 Like hot pockets, but better
 
 So if you notice in our [last commit](https://github.com/olinjs/twitter/tree/411ff1e1f291d70c1d61bda37cc5087cf61e2854) we got the twitter stream and were writing it to the browser with res.write. However, this means that you can't render the template because the page is never done rendering.
@@ -104,7 +110,7 @@ Now we are passing the initialized http server over to the socket.io library. Th
 
 Next we'll start up the socket connection. This requires code on both our server **and** our client (because socket.io has to talk between the two).
 
-```javascript
+```
 // app.js
 io.on('connection', function(socket) {
   console.log("browser connected");
@@ -127,7 +133,7 @@ In our clientside code, we're going to include the `/socket.io/socket.io.js` scr
 
 A socket from socket.io has an `emit` and a `on` function. If computer A was sending computer B a message in pesudo code it'll look something like
 
-```javascript
+```
 A.emit('special_message_name', {'data': 5});
 B.on('special_message_name', function(data) {
   console.log(data.data);
